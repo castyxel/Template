@@ -1,0 +1,90 @@
+#include<cstdio>
+#include<cstring>
+#include<vector>
+#include<stack>
+#include<cmath>
+#include<algorithm>
+#define mem(x,y) memset(x,y,sizeof(x))
+#define MAXN 1020
+using namespace std;
+int dag[MAXN], low[MAXN], dfn[MAXN];
+int n, ndag,cnt;
+bool instack[MAXN];
+int b[505][505];
+vector<int>dot[MAXN];
+stack<int>stacks;
+//add edge a-->b
+void addedges(int a, int astate, int b, int bstate)
+{
+	planea=2*planea+astate;
+	    planeb=2*planeb+bstate;
+	        dot[planea].push_back(planeb);
+		}
+		//DIY
+		void buildmap(int n)
+		{
+		}
+		void tarjan(int u)
+		{
+		    dfn[u]=low[u]=cnt++;
+		        stacks.push(u);
+			    instack[u]=true;
+			    	int len=dot[u].size();
+				    for(int i=0;i<len;i++)
+				        {
+					        int v=dot[u][i];
+						        if(!dfn[v])
+							        {
+								            tarjan(v);
+									                low[u]=min(low[u],low[v]);
+											        }
+												        else if(instack[v])
+													        {
+														            low[u]=min(low[u],dfn[v]);
+															            }
+																        }
+																	    if(dfn[u]==low[u])
+																	        {
+																		        int tmp=-1;
+																			        while(tmp!=u)
+																				        {
+																					            tmp=stacks.top();
+																						                stacks.pop();
+																								            dag[tmp]=ndag;
+																									                instack[tmp]=false;
+																											        }
+																												        ndag++;
+																													    }
+
+																													    }
+																													    void builddag()
+																													    {
+																													        for(int i=0;i<2*n;i++)
+																														        if(!dfn[i])tarjan(i);
+																															}
+																															void init()
+																															{
+																															    mem(dag, 0);
+																															        mem(dfn, 0);
+																																    mem(low, 0);
+																																        mem(instack, false);
+																																	    for(int i=0;i<=2*n;i++)
+																																	            dot[i].clear();
+																																		        while(!stacks.empty())
+																																			        stacks.pop();
+																																				    cnt=1;ndag=0;
+																																				    }
+																																				    //if have no conflicts, return true
+																																				    bool haveresult()
+																																				    {
+																																				        init();
+																																					    buildmap(n);
+																																					        builddag();
+																																						    for(int i=0;i<2*n;i+=2)
+																																						        {
+																																							        if(dag[i]==dag[i^1])
+																																								        return false;
+																																									    }
+																																									    	return true;
+																																										}
+																																										
